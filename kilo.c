@@ -5,6 +5,19 @@
 #include <termios.h>
 #include <unistd.h>
 
+/*
+ * This mirrors what the CTRL key does in the terminal: it strips the
+ * 6th and 7th bits from whatever key you press in combination with
+ * CTRL, and sends that.  For example:
+ *
+ * a		0061	0110 0001
+ * CTRL-a	0001	0000 0001
+ *
+ * q		0071	0111 0001
+ * CTRL-q	0011	0001 0001
+ */
+#define CTRL_KEY(k) ((k) & 0x1f)
+
 struct termios orig_termios;
 
 void die(const char *s) {
@@ -50,7 +63,7 @@ int main() {
 		} else {
 			printf("%d ('%c')\r\n", c, c);
 		}
-		if (c == 'q') {
+		if (c == CTRL_KEY('q')) {
 			break;
 		}
 	}
