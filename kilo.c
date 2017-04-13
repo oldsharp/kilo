@@ -70,12 +70,6 @@ void editor_refresh_screen() {
 void editor_process_keypress() {
 	char c = editor_read_key();
 
-	if (iscntrl(c)) {
-		printf("%d\r\n", c);
-	} else {
-		printf("%d ('%c')\r\n", c, c);
-	}
-
 	switch (c) {
 		case CTRL_KEY('q'):
 			exit(0);
