@@ -76,7 +76,29 @@ char editor_read_key() {
 int get_window_size(int *rows, int *cols) {
 	struct winsize ws;
 
-	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
+	/*
+	 * Sticking a "1 ||" here temporarily so that we can
+	 * test our fallback branch.
+	 */
+	if (1 || ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1
+			|| ws.ws_col == 0) {
+		/*
+		 * The C command (Cursor Forward) moves the cursor to
+		 * the right, ant the B command (Cursor Down) moves the
+		 * cursor down.  The large argument 999 should ensure
+		 * that the cursor reaches the right and bottom edges
+		 * of the screen.
+		 */
+		if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) {
+			return -1;
+		}
+		/*
+		 * Because we are always returning -1 at this point,
+		 * we make a call to editor_read_key(), so we can
+		 * observe the results of the escape sequences before
+		 * the programe calls die() and clears the screen.
+		 */
+		editor_read_key();
 		return -1;
 	} else {
 		*cols = ws.ws_col;
