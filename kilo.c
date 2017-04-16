@@ -107,12 +107,7 @@ int get_cursor_position(int *rows, int *cols) {
 int get_window_size(int *rows, int *cols) {
 	struct winsize ws;
 
-	/*
-	 * Sticking a "1 ||" here temporarily so that we can
-	 * test our fallback branch.
-	 */
-	if (1 || ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1
-			|| ws.ws_col == 0) {
+	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
 		/*
 		 * The C command (Cursor Forward) moves the cursor to
 		 * the right, ant the B command (Cursor Down) moves the
