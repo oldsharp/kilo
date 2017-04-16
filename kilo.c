@@ -73,6 +73,32 @@ char editor_read_key() {
 	return c;
 }
 
+int get_cursor_position(int *rows, int *cols) {
+	/*
+	 * The n command (Device status report) can be used to query
+	 * the terminal for status information.  We give it an argument
+	 * of 6 to ask for the cursor position.  Then we can read the
+	 * reply from STDIN.
+	 */
+	if (write(STDOUT_FILENO, "\x1b[6n", 4) != 4) {
+		return -1;
+	}
+
+	printf("\r\n");
+
+	char c;
+	while (read(STDIN_FILENO, &c, 1) == 1) {
+		if (iscntrl(c)) {
+			printf("%d\r\n", c);
+		} else {
+			printf("%d ('%c')\r\n", c, c);
+		}
+	}
+
+	editor_read_key();
+	return -1;
+}
+
 int get_window_size(int *rows, int *cols) {
 	struct winsize ws;
 
@@ -92,14 +118,7 @@ int get_window_size(int *rows, int *cols) {
 		if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) {
 			return -1;
 		}
-		/*
-		 * Because we are always returning -1 at this point,
-		 * we make a call to editor_read_key(), so we can
-		 * observe the results of the escape sequences before
-		 * the programe calls die() and clears the screen.
-		 */
-		editor_read_key();
-		return -1;
+		return get_cursor_position(rows, cols);
 	} else {
 		*cols = ws.ws_col;
 		*rows = ws.ws_row;
