@@ -20,6 +20,8 @@
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 struct editor_config {
+	int screenrows;
+	int screencols;
 	struct termios orig_termios;
 };
 
@@ -111,8 +113,15 @@ void editor_process_keypress() {
 	}
 }
 
+void init_editor() {
+	if (get_window_size(&E.screenrows, &E.screencols) == -1) {
+		die("get_window_size");
+	}
+}
+
 int main() {
 	enable_raw_mode();
+	init_editor();
 
 	while (1) {
 		editor_refresh_screen();
