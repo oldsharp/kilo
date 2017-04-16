@@ -36,15 +36,13 @@ void die(const char *s) {
 }
 
 void disable_raw_mode() {
-	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios) == -1) {
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios) == -1)
 		die("tcsetattr");
-	}
 }
 
 void enable_raw_mode() {
-	if (tcgetattr(STDIN_FILENO, &E.orig_termios) == -1) {
+	if (tcgetattr(STDIN_FILENO, &E.orig_termios) == -1)
 		die("tcgetattr");
-	}
 	atexit(disable_raw_mode);
 
 	struct termios raw = E.orig_termios;
@@ -55,20 +53,17 @@ void enable_raw_mode() {
 	raw.c_cc[VMIN] = 0;
 	raw.c_cc[VTIME] = 1;
 
-	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1) {
+	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == -1)
 		die("tcsetattr");
-	}
 }
 
 char editor_read_key() {
 	int nread;
 	char c;
 
-	while ((nread = read(STDIN_FILENO, &c, 1)) != 1) {
-		if (nread == -1 && errno != EAGAIN) {
+	while ((nread = read(STDIN_FILENO, &c, 1)) != 1)
+		if (nread == -1 && errno != EAGAIN)
 			die("read");
-		}
-	}
 
 	return c;
 }
@@ -83,9 +78,8 @@ int get_cursor_position(int *rows, int *cols) {
 	 * of 6 to ask for the cursor position.  Then we can read the
 	 * reply from STDIN.
 	 */
-	if (write(STDOUT_FILENO, "\x1b[6n", 4) != 4) {
+	if (write(STDOUT_FILENO, "\x1b[6n", 4) != 4)
 		return -1;
-	}
 
 	while (i < sizeof(buf) - 1) {
 		if (read(STDIN_FILENO, &buf[i], 1) != 1)
@@ -115,9 +109,8 @@ int get_window_size(int *rows, int *cols) {
 		 * that the cursor reaches the right and bottom edges
 		 * of the screen.
 		 */
-		if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12) {
+		if (write(STDOUT_FILENO, "\x1b[999C\x1b[999B", 12) != 12)
 			return -1;
-		}
 		return get_cursor_position(rows, cols);
 	} else {
 		*cols = ws.ws_col;
@@ -128,9 +121,8 @@ int get_window_size(int *rows, int *cols) {
 
 void editor_draw_rows() {
 	int i;
-	for (i = 0; i < E.screenrows; i++) {
+	for (i = 0; i < E.screenrows; i++)
 		write(STDOUT_FILENO, "~\r\n", 3);
-	}
 }
 
 void editor_refresh_screen() {
@@ -155,9 +147,8 @@ void editor_process_keypress() {
 }
 
 void init_editor() {
-	if (get_window_size(&E.screenrows, &E.screencols) == -1) {
+	if (get_window_size(&E.screenrows, &E.screencols) == -1)
 		die("get_window_size");
-	}
 }
 
 int main() {
