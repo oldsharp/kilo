@@ -27,7 +27,8 @@ struct editor_config {
 
 struct editor_config E;
 
-void die(const char *s) {
+void die(const char *s)
+{
 	write(STDOUT_FILENO, "\x1b[2J", 4);
 	write(STDOUT_FILENO, "\x1b[H", 3);
 
@@ -35,12 +36,14 @@ void die(const char *s) {
 	exit(1);
 }
 
-void disable_raw_mode() {
+void disable_raw_mode()
+{
 	if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &E.orig_termios) == -1)
 		die("tcsetattr");
 }
 
-void enable_raw_mode() {
+void enable_raw_mode()
+{
 	if (tcgetattr(STDIN_FILENO, &E.orig_termios) == -1)
 		die("tcgetattr");
 	atexit(disable_raw_mode);
@@ -57,7 +60,8 @@ void enable_raw_mode() {
 		die("tcsetattr");
 }
 
-char editor_read_key() {
+char editor_read_key()
+{
 	int nread;
 	char c;
 
@@ -68,7 +72,8 @@ char editor_read_key() {
 	return c;
 }
 
-int get_cursor_position(int *rows, int *cols) {
+int get_cursor_position(int *rows, int *cols)
+{
 	char buf[32];
 	unsigned int i = 0;
 
@@ -98,7 +103,8 @@ int get_cursor_position(int *rows, int *cols) {
 	return 0;
 }
 
-int get_window_size(int *rows, int *cols) {
+int get_window_size(int *rows, int *cols)
+{
 	struct winsize ws;
 
 	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
@@ -119,7 +125,8 @@ int get_window_size(int *rows, int *cols) {
 	}
 }
 
-void editor_draw_rows() {
+void editor_draw_rows()
+{
 	int i;
 	for (i = 0; i < E.screenrows; i++) {
 		write(STDOUT_FILENO, "~", 1);
@@ -128,7 +135,8 @@ void editor_draw_rows() {
 	}
 }
 
-void editor_refresh_screen() {
+void editor_refresh_screen()
+{
 	write(STDOUT_FILENO, "\x1b[2J", 4);
 	write(STDOUT_FILENO, "\x1b[H", 3);
 
@@ -137,7 +145,8 @@ void editor_refresh_screen() {
 	write(STDOUT_FILENO, "\x1b[H", 3);
 }
 
-void editor_process_keypress() {
+void editor_process_keypress()
+{
 	char c = editor_read_key();
 
 	switch (c) {
@@ -149,12 +158,14 @@ void editor_process_keypress() {
 	}
 }
 
-void init_editor() {
+void init_editor()
+{
 	if (get_window_size(&E.screenrows, &E.screencols) == -1)
 		die("get_window_size");
 }
 
-int main() {
+int main()
+{
 	enable_raw_mode();
 	init_editor();
 
