@@ -110,7 +110,7 @@ int get_window_size(int *rows, int *cols)
 	if (ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == -1 || ws.ws_col == 0) {
 		/*
 		 * The C command (Cursor Forward) moves the cursor to
-		 * the right, ant the B command (Cursor Down) moves the
+		 * the right, and the B command (Cursor Down) moves the
 		 * cursor down.  The large argument 999 should ensure
 		 * that the cursor reaches the right and bottom edges
 		 * of the screen.
