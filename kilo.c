@@ -125,6 +125,16 @@ int get_window_size(int *rows, int *cols)
 	}
 }
 
+/*
+ * Append buffer.
+ */
+struct abuf {
+	char *b;
+	int len;
+};
+
+#define ABUF_INIT {NULL, 0}
+
 void editor_draw_rows()
 {
 	int i;
