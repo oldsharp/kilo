@@ -152,24 +152,29 @@ void ab_free(struct abuf *ab)
 	free(ab->b);
 }
 
-void editor_draw_rows()
+void editor_draw_rows(struct abuf *ab)
 {
 	int i;
 	for (i = 0; i < E.screenrows; i++) {
-		write(STDOUT_FILENO, "~", 1);
+		ab_append(ab, "~", 1);
 		if (i < E.screenrows - 1)
-			write(STDOUT_FILENO, "\r\n", 2);
+			ab_append(ab, "\r\n", 2);
 	}
 }
 
 void editor_refresh_screen()
 {
-	write(STDOUT_FILENO, "\x1b[2J", 4);
-	write(STDOUT_FILENO, "\x1b[H", 3);
+	struct abuf ab = ABUF_INIT;
 
-	editor_draw_rows();
+	ab_append(&ab, "\x1b[2J", 4);
+	ab_append(&ab, "\x1b[H", 3);
 
-	write(STDOUT_FILENO, "\x1b[H", 3);
+	editor_draw_rows(&ab);
+
+	ab_append(&ab, "\x1b[H", 3);
+
+	write(STDOUT_FILENO, ab.b, ab.len);
+	ab_free(&ab);
 }
 
 void editor_process_keypress()
