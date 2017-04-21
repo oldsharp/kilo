@@ -166,12 +166,21 @@ void editor_refresh_screen()
 {
 	struct abuf ab = ABUF_INIT;
 
+	/*
+	 * The 'l' and 'h' commands in the escape sequences below are
+	 * used to tell the terminal to hide and show the cursor.
+	 * Note that some terminals might not support hiding/showing
+	 * the cursor, because the argument "?25" appeared in later VT
+	 * models, not VT100.
+	 */
+	ab_append(&ab, "\x1b[?25l", 6);
 	ab_append(&ab, "\x1b[2J", 4);
 	ab_append(&ab, "\x1b[H", 3);
 
 	editor_draw_rows(&ab);
 
 	ab_append(&ab, "\x1b[H", 3);
+	ab_append(&ab, "\x1b[?25h", 6);
 
 	write(STDOUT_FILENO, ab.b, ab.len);
 	ab_free(&ab);
