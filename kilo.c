@@ -79,7 +79,7 @@ int get_cursor_position(int *rows, int *cols)
 	unsigned int i = 0;
 
 	/*
-	 * The n command (Device status report) can be used to query
+	 * The n command (Device Status Report) can be used to query
 	 * the terminal for status information.  We give it an argument
 	 * of 6 to ask for the cursor position.  Then we can read the
 	 * reply from STDIN.
@@ -158,8 +158,8 @@ void editor_draw_rows(struct abuf *ab)
 	for (i = 0; i < E.screenrows; i++) {
 		ab_append(ab, "~", 1);
 		/*
-		 * The 'K' command (Erase In Line) erases part of the
-		 * current line.  Its argument is analogous to the 'J'
+		 * The K command (Erase In Line) erases part of the
+		 * current line.  Its argument is analogous to the J
 		 * command's argument: 2 erases the whole line,
 		 * 1 erases the part of the line to the left of the
 		 * cursor, and 0 erases the part of the line to the
@@ -178,11 +178,11 @@ void editor_refresh_screen()
 	struct abuf ab = ABUF_INIT;
 
 	/*
-	 * The 'l' and 'h' commands in the escape sequences below are
-	 * used to tell the terminal to hide and show the cursor.
-	 * Note that some terminals might not support hiding/showing
-	 * the cursor, because the argument "?25" appeared in later VT
-	 * models, not VT100.
+	 * The l and h commands in the escape sequences below are used
+	 * to tell the terminal to hide and show the cursor.  Note that
+	 * some terminals might not support hiding/showing the cursor,
+	 * because the argument "?25" appeared in later VT models, not
+	 * VT100.
 	 */
 	ab_append(&ab, "\x1b[?25l", 6);
 	ab_append(&ab, "\x1b[H", 3);
