@@ -157,6 +157,17 @@ void editor_draw_rows(struct abuf *ab)
 	int i;
 	for (i = 0; i < E.screenrows; i++) {
 		ab_append(ab, "~", 1);
+		/*
+		 * The 'K' command (Erase In Line) erases part of the
+		 * current line.  Its argument is analogous to the 'J'
+		 * command's argument: 2 erases the whole line,
+		 * 1 erases the part of the line to the left of the
+		 * cursor, and 0 erases the part of the line to the
+		 * right of the cursor.  0 is the default argument,
+		 * and that's what we want, so we leave out the
+		 * argument and just use <esc>[K.
+		 */
+		ab_append(ab, "\x1b[K", 3);
 		if (i < E.screenrows - 1)
 			ab_append(ab, "\r\n", 2);
 	}
@@ -174,7 +185,6 @@ void editor_refresh_screen()
 	 * models, not VT100.
 	 */
 	ab_append(&ab, "\x1b[?25l", 6);
-	ab_append(&ab, "\x1b[2J", 4);
 	ab_append(&ab, "\x1b[H", 3);
 
 	editor_draw_rows(&ab);
