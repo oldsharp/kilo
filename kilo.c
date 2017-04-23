@@ -7,6 +7,8 @@
 #include <termios.h>
 #include <unistd.h>
 
+#define KILO_VERSION "0.0.1"
+
 /*
  * This mirrors what the CTRL key does in the terminal: it strips the
  * 6th and 7th bits from whatever key you press in combination with
@@ -156,7 +158,16 @@ void editor_draw_rows(struct abuf *ab)
 {
 	int i;
 	for (i = 0; i < E.screenrows; i++) {
-		ab_append(ab, "~", 1);
+		if (i == E.screenrows / 3) {
+			char welcome[80];
+			int welcomelen = snprintf(welcome, sizeof(welcome),
+				"Kilo editor -- version %s", KILO_VERSION);
+			if (welcomelen > E.screencols)
+				welcomelen = E.screencols;
+			ab_append(ab, welcome, welcomelen);
+		} else {
+			ab_append(ab, "~", 1);
+		}
 		/*
 		 * The K command (Erase In Line) erases part of the
 		 * current line.  Its argument is analogous to the J
