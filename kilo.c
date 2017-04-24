@@ -23,6 +23,12 @@
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 struct editor_config {
+	/*
+	 * cx is the horizontal coordinate of the cursor (the column).
+	 * cy is the vertical coordinate (the row).
+	 */
+	int cx;
+	int cy;
 	int screenrows;
 	int screencols;
 	struct termios orig_termios;
@@ -229,6 +235,9 @@ void editor_process_keypress()
 
 void init_editor()
 {
+	E.cx = 0;
+	E.cy = 0;
+
 	if (get_window_size(&E.screenrows, &E.screencols) == -1)
 		die("get_window_size");
 }
