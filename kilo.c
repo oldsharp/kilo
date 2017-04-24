@@ -213,7 +213,9 @@ void editor_refresh_screen()
 
 	editor_draw_rows(&ab);
 
-	ab_append(&ab, "\x1b[H", 3);
+	char buf[32];
+	snprintf(buf, sizeof(buf), "\x1b[%d;%dH", E.cy+1, E.cx+1);
+	ab_append(&ab, buf, strlen(buf));
 	ab_append(&ab, "\x1b[?25h", 6);
 
 	write(STDOUT_FILENO, ab.b, ab.len);
