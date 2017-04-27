@@ -22,11 +22,16 @@
  */
 #define CTRL_KEY(k) ((k) & 0x1f)
 
+/*
+ * We need to choose a representation for arrow keys.  We give them a
+ * large integer (1000~1003) that is out of the range of a char, so
+ * that they don't conflict with any ordinary keypresses.
+ */
 enum editor_key {
-	ARROW_LEFT = 'a',
-	ARROW_RIGHT = 'd',
-	ARROW_UP = 'w',
-	ARROW_DOWN = 's'
+	ARROW_LEFT = 1000,
+	ARROW_RIGHT,
+	ARROW_UP,
+	ARROW_DOWN
 };
 
 struct editor_config {
@@ -79,7 +84,7 @@ void enable_raw_mode()
 	}
 }
 
-char editor_read_key()
+int editor_read_key()
 {
 	int nread;
 	char c;
@@ -273,7 +278,7 @@ void editor_refresh_screen()
 	ab_free(&ab);
 }
 
-void editor_move_cursor(char key)
+void editor_move_cursor(int key)
 {
 	switch (key) {
 		case ARROW_LEFT:
@@ -293,7 +298,7 @@ void editor_move_cursor(char key)
 
 void editor_process_keypress()
 {
-	char c = editor_read_key();
+	int c = editor_read_key();
 
 	switch (c) {
 		case CTRL_KEY('q'):
