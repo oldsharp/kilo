@@ -22,6 +22,13 @@
  */
 #define CTRL_KEY(k) ((k) & 0x1f)
 
+enum editor_key {
+	ARROW_LEFT = 'a',
+	ARROW_RIGHT = 'd',
+	ARROW_UP = 'w',
+	ARROW_DOWN = 's'
+};
+
 struct editor_config {
 	/*
 	 * cx is the horizontal coordinate of the cursor (the column).
@@ -100,13 +107,13 @@ char editor_read_key()
 		if (seq[0] == '[') {
 			switch (seq[1]) {
 				case 'A':
-					return 'w';
+					return ARROW_UP;
 				case 'B':
-					return 's';
+					return ARROW_DOWN;
 				case 'C':
-					return 'd';
+					return ARROW_RIGHT;
 				case 'D':
-					return 'a';
+					return ARROW_LEFT;
 			}
 		}
 		return '\x1b';
@@ -269,16 +276,16 @@ void editor_refresh_screen()
 void editor_move_cursor(char key)
 {
 	switch (key) {
-		case 'a':
+		case ARROW_LEFT:
 			E.cx--;
 			break;
-		case 'd':
+		case ARROW_RIGHT:
 			E.cx++;
 			break;
-		case 'w':
+		case ARROW_UP:
 			E.cy--;
 			break;
-		case 's':
+		case ARROW_DOWN:
 			E.cy++;
 			break;
 	}
@@ -294,10 +301,10 @@ void editor_process_keypress()
 			write(STDOUT_FILENO, "\x1b[H", 3);
 			exit(0);
 			break;
-		case 'w':
-		case 's':
-		case 'a':
-		case 'd':
+		case ARROW_UP:
+		case ARROW_DOWN:
+		case ARROW_LEFT:
+		case ARROW_RIGHT:
 			editor_move_cursor(c);
 			break;
 	}
