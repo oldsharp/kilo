@@ -100,8 +100,19 @@ int editor_read_key()
 	}
 
 	/*
-	 * Here we handle the arrow keys.  Currently we just map them
-	 * to the corresponding w, a, s, d keys.
+	 * Detect the arrow keys.  Arrow keys are sent in the form of
+	 * an escape sequence that starts with '\x1b', '[', followed
+	 * by an 'A', 'B', 'C', or 'D'.
+	 *
+	 * Also detect Page-Up and Page-Down keys.  Page-Up is sent as
+	 * <esc>[5~ and Page-Down is sent as <esc>[6~.
+	 *
+	 * Also detect Home-Key and End-Key.  The Home-Key could be
+	 * sent as <esc>[1~, <esc>[7~, <esc>[H, or <esc>OH.  The
+	 * End-Key could be sent as <esc>[4~, <esc>[8~, <esc>[F, or
+	 * <esc>OF.  What escape sequence we receive is depending on
+	 * the OS type or the terminal emulator used.  Here we handle
+	 * all of these possible cases.
 	 */
 	if (c == '\x1b') {
 		char seq[3];
@@ -115,11 +126,6 @@ int editor_read_key()
 
 		if (seq[0] == '[') {
 			if (seq[1] >= '0' && seq[1] <= '9') {
-				/*
-				 * Detect Page-Up and Page-Down keys.
-				 * Page-Up is sent as <esc>[5~ and
-				 * Page-Down is sent as <esc>[6~.
-				 */
 				if (read(STDIN_FILENO, &seq[2], 1) != 1) {
 					return '\x1b';
 				}
