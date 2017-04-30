@@ -32,6 +32,7 @@ enum editor_key {
 	ARROW_RIGHT,
 	ARROW_UP,
 	ARROW_DOWN,
+	DEL_KEY,
 	HOME_KEY,
 	END_KEY,
 	PAGE_UP,
@@ -113,6 +114,8 @@ int editor_read_key()
 	 * <esc>OF.  What escape sequence we receive is depending on
 	 * the OS type or the terminal emulator used.  Here we handle
 	 * all of these possible cases.
+	 *
+	 * Also detect Del-Key.  The Del-Key is sent as <esc>[3~.
 	 */
 	if (c == '\x1b') {
 		char seq[3];
@@ -133,6 +136,8 @@ int editor_read_key()
 					switch (seq[1]) {
 						case '1':
 							return HOME_KEY;
+						case '3':
+							return DEL_KEY;
 						case '4':
 							return END_KEY;
 						case '5':
