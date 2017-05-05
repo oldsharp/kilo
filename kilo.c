@@ -293,24 +293,35 @@ void editor_draw_rows(struct abuf *ab)
 {
 	int i;
 	for (i = 0; i < E.screenrows; i++) {
-		if (i == E.screenrows / 3) {
-			char welcome[80];
-			int welcomelen = snprintf(welcome, sizeof(welcome),
-				"Kilo editor -- version %s", KILO_VERSION);
-			if (welcomelen > E.screencols) {
-				welcomelen = E.screencols;
-			}
-			int padding = (E.screencols - welcomelen) / 2;
-			if (padding) {
+		if (i >= E.numrows) {
+			if (i == E.screenrows / 3) {
+				char welcome[80];
+				int welcomelen = snprintf(
+					welcome,
+					sizeof(welcome),
+					"Kilo editor -- version %s",
+					KILO_VERSION);
+				if (welcomelen > E.screencols) {
+					welcomelen = E.screencols;
+				}
+				int padding = (E.screencols - welcomelen) / 2;
+				if (padding) {
+					ab_append(ab, "~", 1);
+					padding--;
+				}
+				while (padding--) {
+					ab_append(ab, " ", 1);
+				}
+				ab_append(ab, welcome, welcomelen);
+			} else {
 				ab_append(ab, "~", 1);
-				padding--;
 			}
-			while (padding--) {
-				ab_append(ab, " ", 1);
-			}
-			ab_append(ab, welcome, welcomelen);
 		} else {
-			ab_append(ab, "~", 1);
+			int len = E.row.size;
+			if (len > E.screencols) {
+				len = E.screencols;
+			}
+			ab_append(ab, E.row.chars, len);
 		}
 		/*
 		 * The K command (Erase In Line) erases part of the
