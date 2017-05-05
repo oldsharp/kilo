@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/ioctl.h>
+#include <sys/types.h>
 #include <termios.h>
 #include <unistd.h>
 
@@ -247,6 +248,21 @@ int get_window_size(int *rows, int *cols)
 }
 
 /*
+ * File I/O.
+ */
+void editor_open()
+{
+	char *line = "Hello, world";
+	ssize_t line_len = 12;
+
+	E.row.size = line_len;
+	E.row.chars = malloc(line_len + 1);
+	memcpy(E.row.chars, line, line_len);
+	E.row.chars[line_len] = '\0';
+	E.numrows = 1;
+}
+
+/*
  * Append buffer.
  */
 struct abuf {
@@ -417,6 +433,7 @@ int main()
 {
 	enable_raw_mode();
 	init_editor();
+	editor_open();
 
 	while (1) {
 		editor_refresh_screen();
