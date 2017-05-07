@@ -313,7 +313,7 @@ void editor_draw_rows(struct abuf *ab)
 	int i;
 	for (i = 0; i < E.screenrows; i++) {
 		if (i >= E.numrows) {
-			if (i == E.screenrows / 3) {
+			if (E.numrows == 0 && i == E.screenrows / 3) {
 				char welcome[80];
 				int welcomelen = snprintf(
 					welcome,
