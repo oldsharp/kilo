@@ -251,6 +251,15 @@ int get_window_size(int *rows, int *cols)
 	}
 }
 
+void editor_append_row(char *s, size_t len)
+{
+	E.row.size = len;
+	E.row.chars = malloc(len + 1);
+	memcpy(E.row.chars, s, len);
+	E.row.chars[len] = '\0';
+	E.numrows = 1;
+}
+
 /*
  * File I/O.
  */
@@ -271,11 +280,7 @@ void editor_open(char *filename)
 				line[linelen - 1] == '\r')) {
 			linelen--;
 		}
-		E.row.size = linelen;
-		E.row.chars = malloc(linelen + 1);
-		memcpy(E.row.chars, line, linelen);
-		E.row.chars[linelen] = '\0';
-		E.numrows = 1;
+		editor_append_row(line, linelen);
 	}
 	free(line);
 	fclose(fp);
