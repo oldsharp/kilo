@@ -344,11 +344,11 @@ void editor_draw_rows(struct abuf *ab)
 				ab_append(ab, "~", 1);
 			}
 		} else {
-			int len = E.row.size;
+			int len = E.row[i].size;
 			if (len > E.screencols) {
 				len = E.screencols;
 			}
-			ab_append(ab, E.row.chars, len);
+			ab_append(ab, E.row[i].chars, len);
 		}
 		/*
 		 * The K command (Erase In Line) erases part of the
