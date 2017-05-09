@@ -56,6 +56,10 @@ struct editor_config {
 	 */
 	int cx;
 	int cy;
+	/*
+	 * Row offset.
+	 */
+	int rowoff;
 	int screenrows;
 	int screencols;
 	int numrows;
@@ -459,6 +463,7 @@ void init_editor()
 {
 	E.cx = 0;
 	E.cy = 0;
+	E.rowoff = 0;
 	E.numrows = 0;
 	E.row = NULL;
 
