@@ -56,14 +56,29 @@ struct editor_config {
 	 */
 	int cx;
 	int cy;
+
 	/*
 	 * Row offset.
 	 */
 	int rowoff;
+
+	/*
+	 * Screen boundary: how many rows and columns the screen
+	 * allows to display.
+	 */
 	int screenrows;
 	int screencols;
+
+	/*
+	 * Row info for current screen.
+	 */
 	int numrows;
 	erow *row;
+
+	/*
+	 * Original terminal configurations.  Used to recovery to the
+	 * initial state when exit.
+	 */
 	struct termios orig_termios;
 };
 
