@@ -338,7 +338,8 @@ void editor_draw_rows(struct abuf *ab)
 {
 	int i;
 	for (i = 0; i < E.screenrows; i++) {
-		if (i >= E.numrows) {
+		int filerow = i + E.rowoff;
+		if (filerow >= E.numrows) {
 			if (E.numrows == 0 && i == E.screenrows / 3) {
 				char welcome[80];
 				int welcomelen = snprintf(
@@ -362,11 +363,11 @@ void editor_draw_rows(struct abuf *ab)
 				ab_append(ab, "~", 1);
 			}
 		} else {
-			int len = E.row[i].size;
+			int len = E.row[filerow].size;
 			if (len > E.screencols) {
 				len = E.screencols;
 			}
-			ab_append(ab, E.row[i].chars, len);
+			ab_append(ab, E.row[filerow].chars, len);
 		}
 		/*
 		 * The K command (Erase In Line) erases part of the
