@@ -334,6 +334,15 @@ void ab_free(struct abuf *ab)
 	free(ab->b);
 }
 
+void editor_scroll() {
+	if (E.cy < E.rowoff) {
+		E.rowoff = E.cy;
+	}
+	if (E.cy >= E.rowoff + E.screenrows) {
+		E.rowoff = E.cy - E.screenrows + 1;
+	}
+}
+
 void editor_draw_rows(struct abuf *ab)
 {
 	int i;
@@ -388,6 +397,8 @@ void editor_draw_rows(struct abuf *ab)
 
 void editor_refresh_screen()
 {
+	editor_scroll();
+
 	struct abuf ab = ABUF_INIT;
 
 	/*
