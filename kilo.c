@@ -52,7 +52,7 @@ typedef struct erow {
 struct editor_config {
 	/*
 	 * cx is the horizontal coordinate of the cursor (the column).
-	 * cy is the vertical coordinate (the row).
+	 * cy is the vertical coordinate of the cursor (the row).
 	 */
 	int cx;
 	int cy;
@@ -334,7 +334,8 @@ void ab_free(struct abuf *ab)
 	free(ab->b);
 }
 
-void editor_scroll() {
+void editor_scroll()
+{
 	if (E.cy < E.rowoff) {
 		E.rowoff = E.cy;
 	}
