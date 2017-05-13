@@ -427,7 +427,9 @@ void editor_refresh_screen()
 	editor_draw_rows(&ab);
 
 	char buf[32];
-	snprintf(buf, sizeof(buf), "\x1b[%d;%dH", E.cy-E.rowoff+1, E.cx+1);
+	snprintf(buf, sizeof(buf), "\x1b[%d;%dH",
+			E.cy-E.rowoff+1,
+			E.cx-E.coloff+1);
 	ab_append(&ab, buf, strlen(buf));
 	ab_append(&ab, "\x1b[?25h", 6);
 
