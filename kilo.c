@@ -374,11 +374,22 @@ void editor_draw_rows(struct abuf *ab)
 				ab_append(ab, "~", 1);
 			}
 		} else {
-			int len = E.row[filerow].size;
+			int len = E.row[filerow].size - E.coloff;
+			/*
+			 * Note that when subtracting E.coloff from the
+			 * length, len can now be a negative number,
+			 * meaning the user scrolled horizontally past
+			 * the end of the line.  In that case, we set
+			 * len to 0 so that nothing is displayed on
+			 * that line.
+			 */
+			if (len < 0) {
+				len = 0;
+			}
 			if (len > E.screencols) {
 				len = E.screencols;
 			}
-			ab_append(ab, E.row[filerow].chars, len);
+			ab_append(ab, &E.row[filerow].chars[E.coloff], len);
 		}
 		/*
 		 * The K command (Erase In Line) erases part of the
