@@ -58,9 +58,10 @@ struct editor_config {
 	int cy;
 
 	/*
-	 * Row offset.
+	 * Row and column offset.
 	 */
 	int rowoff;
+	int coloff;
 
 	/*
 	 * Screen boundary: how many rows and columns the screen
@@ -492,6 +493,7 @@ void init_editor()
 	E.cx = 0;
 	E.cy = 0;
 	E.rowoff = 0;
+	E.coloff = 0;
 	E.numrows = 0;
 	E.row = NULL;
 
