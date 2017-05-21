@@ -395,7 +395,7 @@ void editor_draw_rows(struct abuf *ab)
 				ab_append(ab, "~", 1);
 			}
 		} else {
-			int len = E.row[filerow].size - E.coloff;
+			int len = E.row[filerow].rsize - E.coloff;
 			/*
 			 * Note that when subtracting E.coloff from the
 			 * length, len can now be a negative number,
@@ -410,7 +410,7 @@ void editor_draw_rows(struct abuf *ab)
 			if (len > E.screencols) {
 				len = E.screencols;
 			}
-			ab_append(ab, &E.row[filerow].chars[E.coloff], len);
+			ab_append(ab, &E.row[filerow].render[E.coloff], len);
 		}
 		/*
 		 * The K command (Erase In Line) erases part of the
