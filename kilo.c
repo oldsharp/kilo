@@ -61,6 +61,11 @@ struct editor_config {
 	int cy;
 
 	/*
+	 * rx is an index into the render field.
+	 */
+	int rx;
+
+	/*
 	 * Row and column offset.
 	 */
 	int rowoff;
@@ -556,6 +561,7 @@ void init_editor()
 {
 	E.cx = 0;
 	E.cy = 0;
+	E.rx = 0;
 	E.rowoff = 0;
 	E.coloff = 0;
 	E.numrows = 0;
