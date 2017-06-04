@@ -279,6 +279,18 @@ int get_window_size(int *rows, int *cols)
 	}
 }
 
+int editor_row_cx_to_rx(erow *row, int cx) {
+	int rx = 0;
+	int i;
+	for (i = 0; i < cx; i++) {
+		if (row->chars[i] == '\t') {
+			rx += (KILO_TAB_STOP - 1) - (rx % KILO_TAB_STOP);
+		}
+		rx++;
+	}
+	return rx;
+}
+
 void editor_update_row(erow *row)
 {
 	int tabs = 0;
