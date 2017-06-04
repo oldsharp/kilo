@@ -391,7 +391,10 @@ void ab_free(struct abuf *ab)
 
 void editor_scroll()
 {
-	E.rx = E.cx;
+	E.rx = 0;
+	if (E.cy < E.numrows) {
+		E.rx = editor_row_cx_to_rx(&E.row[E.cy], E.cx);
+	}
 
 	if (E.cy < E.rowoff) {
 		E.rowoff = E.cy;
